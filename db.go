@@ -7,6 +7,7 @@ import (
   _ "github.com/lib/pq"
 )
 
+//const --
 const (
   host     = "localhost"
   port     = 5432
