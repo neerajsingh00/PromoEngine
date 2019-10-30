@@ -3,7 +3,8 @@ package main
 import (
   "database/sql"
   "fmt"
-  "github.com/lib/pq"
+  "encoding/json"
+  _ "github.com/lib/pq"
 )
 
 
@@ -12,7 +13,7 @@ type profile struct {
 	gender string
 	kyc_level int 
 	sign_up_date int
-
+	Custom_attributes []string `json: "custom_attributes" `
 }
 
 const (
@@ -114,7 +115,8 @@ func alter_drop_column() {
 func main() {
 
 	
-	fetch()
+//	fetch()
+	custom_a := 
 	fmt.Println("-------")
 	defer db.Close()
 
