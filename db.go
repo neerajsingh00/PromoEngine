@@ -90,7 +90,7 @@ func update() {
 } 
 
 //function to add column
-func alter_column() {
+func alter_add_column() {
 	sqlStatement := `ALTER TABLE profile_schema.profile ADD COLUMN hipbar int ;`
 	_, err = db.Exec(sqlStatement)
 	checkErr(err)
