@@ -3,6 +3,7 @@ package main
 import (
   "database/sql"
   "fmt"
+  "time"
   "encoding/json"
   _ "github.com/lib/pq"
 )
@@ -12,8 +13,8 @@ type profile struct {
 	consumer_id int
 	gender string
 	kyc_level int 
-	sign_up_date int
-	Custom_attributes []string `json: "custom_attributes" `
+	sign_up_date Timestamp
+	Custom_attributes []interface{} `json: "custom_attributes"`
 }
 
 const (
