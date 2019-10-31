@@ -3,8 +3,8 @@ package main
 import (
   "database/sql"
   "fmt"
-  "time"
-  "encoding/json"
+ "time"
+//  "encoding/json"
   _ "github.com/lib/pq"
 )
 
@@ -13,7 +13,7 @@ type profile struct {
 	consumer_id int
 	gender string
 	kyc_level int 
-	sign_up_date Timestamp
+	sign_up_date *time.Time 
 	Custom_attributes []interface{} `json: "custom_attributes"`
 }
 
@@ -66,7 +66,7 @@ func fetch() {
 	}
 	
 	for _, p := range pro {
-		fmt.Println ("%12v, %6v, %9v, %12v \n",&p.consumer_id, &p.gender, &p.kyc_level, &p.sign_up_date)
+		fmt.Println (p.consumer_id,"\t |",p.gender,"\t |", p.kyc_level,"\t |", p.sign_up_date)
 	}
 	
 
@@ -115,9 +115,8 @@ func alter_drop_column() {
 
 func main() {
 
-	
-//	fetch()
-	custom_a := 
+
+	fetch()
 	fmt.Println("-------")
 	defer db.Close()
 
