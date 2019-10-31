@@ -3,7 +3,7 @@ package main
 import (
   "database/sql"
   "fmt"
- "time"
+  "time"
 //  "encoding/json"
   _ "github.com/lib/pq"
 )
@@ -13,7 +13,7 @@ type profile struct {
 	consumer_id int
 	gender string
 	kyc_level int 
-	sign_up_date *time.Time 
+	sign_up_date *time.Time 		`json: "sign_up_date"`
 	Custom_attributes []interface{} `json: "custom_attributes"`
 }
 
@@ -30,7 +30,7 @@ var psqlInfo = fmt.Sprintf("host=%s port=%d user=%s "+"password=%s dbname=%s ssl
 var db, err = sql.Open("postgres", psqlInfo)
 var pro = make([]*profile, 0)
 
-//function to check errors
+//function to check errors 
 func checkErr(err error) {
 	if err != nil {
 		panic(err)	
@@ -85,10 +85,11 @@ func insert() {
 //function to update values
 func update() {
 
-	sqlStatement := `UPDATE profile_schema.profile SET kyc_level = $2 WHERE consumer_id = $1;`
+	sqlStatement := `UPDATE profile_schema.profile SET gender = $1 WHERE consumer_id = $2;`
 	
-	_, err = db.Exec(sqlStatement, 5, 1)
+	_, err = db.Exec(sqlStatement, "female", 5)
 	checkErr(err)	
+	println("-------updated--------")
 } 
 
 //function to add column
@@ -116,6 +117,7 @@ func alter_drop_column() {
 func main() {
 
 
+	update()
 	fetch()
 	fmt.Println("-------")
 	defer db.Close()
