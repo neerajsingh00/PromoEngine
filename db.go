@@ -17,6 +17,10 @@ type profile struct {
 	Custom_attributes []interface{} `json: "custom_attributes"`
 }
 
+type coupon struct {
+
+}
+
 const (
   host     = "localhost"
   port     = 5432
@@ -37,6 +41,24 @@ func checkErr(err error) {
    }
 }
 	
+
+//dropping table
+func drop_table() {
+	sqlStatement := `DROP TABLE coupon`
+	_, err = db.Exec(sqlStatement)
+	checkErr(err)
+	println("----table deleted----")
+}
+
+//creating new table in database
+func create_table() {
+	sqlStatement := `CREATE TABLE coupon()`
+	_, err = db.Exec(sqlStatement)
+	checkErr(err)
+	println("----table created----")
+}
+
+
 //establishing connection with the PSQL server
 func init() {
 	checkErr(err)
@@ -69,8 +91,6 @@ func fetch() {
 		fmt.Println (p.consumer_id,"\t |",p.gender,"\t |", p.kyc_level,"\t |", p.sign_up_date)
 	}
 	
-
-
 	defer rows.Close()
 }
 
@@ -80,6 +100,7 @@ func insert() {
 	var lastInsertId int
 	err = db.QueryRow("INSERT INTO profile_schema.profile(consumer_id, gender, kyc_level, hipbar ) VALUES ($1,$2,$3,$4);",5,"f",2,"beer").Scan(&lastInsertId)
 	err = db.QueryRow("INSERT INTO profile_schema.profile(consumer_id,gender,kyc_level,hipbar) VALUES ($1,$2,$3,$4);",6,"f",0,"beer").Scan(&lastInsertId)
+	println("----inserted values----")
 }
 
 //function to update values
@@ -89,7 +110,7 @@ func update() {
 	
 	_, err = db.Exec(sqlStatement, "female", 5)
 	checkErr(err)	
-	println("-------updated--------")
+	println("-------updated values--------")
 } 
 
 //function to add column
@@ -97,6 +118,7 @@ func alter_add_column() {
 	sqlStatement := `ALTER TABLE profile_schema.profile ADD COLUMN hipbar int ;`
 	_, err = db.Exec(sqlStatement)
 	checkErr(err)
+	println("----column added----")
 }
 
 //function to rename column
@@ -104,6 +126,7 @@ func alter_rename_column() {
 	sqlStatement := `ALTER TABLE profile_schema.profile RENAME COLUMN hipbar TO hipster_bar ;`
 	_, err = db.Exec(sqlStatement)
 	checkErr(err)
+	println("----column renamed---")
 }
 
 //function to drop a column
@@ -111,15 +134,24 @@ func alter_drop_column() {
 	sqlStatement := `ALTER TABLE profile_schema.profile DROP COLUMN hipster_bar ;`
 	_, err = db.Exec(sqlStatement)
 	checkErr(err)
+	println("----column deleted-----")
+}
 
+//function to update and alter column simultaneously
+func alter_and_update_column() {
+	sqlStatement1 := `ALTER TABLE profile_schema.profile ADD column name varchar(100)` 
+	_, err = db.Exec(sqlStatement1)
+	checkErr(err)	
+	
+	sqlStatement2 := `UPDATE profile_schema.profile SET name = $1 WHERE consumer_id = $2`
+	_, err = db.Exec(sqlStatement2,"neeraj",100)
+	checkErr(err)
+	println("-----Altered & Updated simultaneously-----")
 }
 
 func main() {
 
-
-	update()
-	fetch()
-	fmt.Println("-------")
+	create_table()
 	defer db.Close()
 
 }
