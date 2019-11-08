@@ -13,8 +13,8 @@ type profile struct {
 	consumer_id int
 	gender string
 	kyc_level int 
-	sign_up_date *time.Time 		`json: "sign_up_date"`
-	Custom_attributes []interface{} `json: "custom_attributes"`
+	sign_up_date time.Time
+
 }
 
 type coupon struct {
@@ -80,7 +80,7 @@ func checkErr(err error) {
 
 //dropping table
 func drop_table() {
-	sqlStatement := `DROP TABLE coupon`
+	sqlStatement := "DROP TABLE coupon"
 	_, err = db.Exec(sqlStatement)
 	checkErr(err)
 	println("----table deleted----")
@@ -88,7 +88,7 @@ func drop_table() {
 
 //creating new table in database
 func create_table() {
-	sqlStatement := `CREATE TABLE coupon()`
+	sqlStatement := "CREATE TABLE coupon()"
 	_, err = db.Exec(sqlStatement)
 	checkErr(err)
 	println("----table created----")
@@ -97,18 +97,23 @@ func create_table() {
 //function to insert values
 func insert() {
 	
-	sqlStatement := `INSERT INTO profile_schema.profile(consumer_id, gender, kyc_level) VALUES ($1,$2,$3)`
+	Initial_Sql_Statement := "INSERT INTO profile_schema.profile() VALUES ($1,$2,$3)"
 
-	_, err = db.Exec(sqlStatement,103,"female",2)
+	col := "consumer_id,gender,kyc_level"
+	
+	Final_Sql_Statement := Initial_Sql_Statement[:35] + col + Initial_Sql_Statement[35:]
+	
+	_, err = db.Exec(Final_Sql_Statement,110,"female",1)
 	checkErr(err)
-
+	
+	fmt.Println(Final_Sql_Statement)
 	println("----inserted values----")
 }
 
 //function to update values
 func update() {
 
-	sqlStatement := `UPDATE profile_schema.profile SET gender = $1 WHERE consumer_id = $2;`
+	sqlStatement := "UPDATE profile_schema.profile SET gender = $1 WHERE consumer_id = $2;"
 	
 	_, err = db.Exec(sqlStatement, "female", 5)
 	checkErr(err)	
@@ -133,7 +138,7 @@ func alter_rename_column() {
 
 //function to drop a column
 func alter_drop_column() {
-	sqlStatement := `ALTER TABLE profile_schema.profile DROP COLUMN hipster_bar ;`
+	sqlStatement := `ALTER TABLE profile_schema.profile DROP COLUMN name`
 	_, err = db.Exec(sqlStatement)
 	checkErr(err)
 	println("----column deleted-----")
@@ -152,8 +157,11 @@ func alter_and_update_column() {
 }
 
 func main() {
-
+	
+	insert()
+	
 	fetch()	
+	
 	defer db.Close()
 
 }
